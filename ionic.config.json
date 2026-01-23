@@ -1,0 +1,7 @@
+{
+  "name": "fsm-mobile-client-react",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
