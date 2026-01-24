@@ -1,0 +1,3 @@
+- finish fixing camera issue in browser
+- test sr retrieval with app running
+- better error message when app down

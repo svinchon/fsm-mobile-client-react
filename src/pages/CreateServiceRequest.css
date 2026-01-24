@@ -1,0 +1,17 @@
+ion-item.item-has-focus ion-label,
+ion-item.item-has-value ion-label {
+  transform: translateY(-20px) scale(0.75); /* Adjust as needed */
+}
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --inner-border-width: 0;
+  --highlight-height: 0;
+  --detail-icon-opacity: 0;
+  --detail-icon-font-size: 0;
+}
+
+ion-textarea {
+  --padding-top: 20px; /* Adjust as needed to give space for the label */
+}

@@ -1,0 +1,44 @@
+/*
+  When the scanner is active, we need to make the content area transparent
+  so that the camera view, which is behind the webview, becomes visible.
+*/
+.scanner-content.barcode-scanner-active {
+  /* Make the content of the active page transparent */
+  --ion-background-color: transparent !important;
+  --background: transparent !important;
+}
+
+/*
+  The video element for the web scanner. The plugin will automatically
+  find this and use it.
+*/
+.scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stop-scan-button {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+}
+
+/* Ensure the page content is transparent so the camera can be seen */
+.scanner-content.barcode-scanner-active .scanner-container {
+  background: transparent;
+}
+
+.scan-result-note {
+  display: block;
+  background: #fff;
+  color: #111;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.scanner-content.barcode-scanner-active .scan-result-note { background: #fff; }
+
