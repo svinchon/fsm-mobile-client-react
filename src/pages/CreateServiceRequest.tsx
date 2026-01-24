@@ -21,17 +21,17 @@ const CreateServiceRequest: React.FC = () => {
 
   const [present] = useIonToast();
 
-  const isEmailValid = (v: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  // const isEmailValid = (v: string) =>
+  //   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  const isFormValid =
-    customerId.length > 0 &&
-    problemDescription.length > 0 &&
-    password.length >= 6;
+  // const isFormValid =
+  //   customerId.length > 0 &&
+  //   problemDescription.length > 0 &&
+  //   password.length >= 6;
 
-  const submit = () => {
-    present(`Welcome ${customerId} 👋`, 2000);
-  };
+  // const submit = () => {
+  //   present(`Welcome ${customerId} 👋`, 2000);
+  // };
 
   const takePicture = async () => {
     try {

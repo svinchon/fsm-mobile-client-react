@@ -1,0 +1,21 @@
+ion-header ion-toolbar {
+  --border-width: 0 !important; /* Remove default border */
+  --box-shadow: none !important; /* Remove default shadow */
+  border-bottom: 1px solid var(--ion-color-primary);
+}
+
+ion-footer ion-toolbar {
+  --border-width: 0 !important; /* Remove default border */
+  --box-shadow: none !important; /* Remove default shadow */
+  border-top: 1px solid var(--ion-color-primary);
+}
+
+/* ion-content::part(scroll) {
+  box-shadow: none;
+} */
+
+.response-card {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  margin-top: 16px;
+}
