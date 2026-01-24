@@ -16,37 +16,57 @@ import {
   helpOutline,
   send
 } from 'ionicons/icons';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './KnowledgeAgent.css';
 
 const KnowledgeAgent: React.FC = () => {
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const [text, setText] = useState('');
-  const [response, setResponse] = useState('');
+  const [conversation, setConversation] = useState<{text: string, sender: 'user' | 'api'}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const ionContentRef = useRef<HTMLIonContentElement>(null);
+
+  useEffect(() => {
+    if (ionContentRef.current) {
+      ionContentRef.current.scrollToBottom(300);
+    }
+  }, [conversation]);
 
   const toggleTextArea = () => {
     setIsTextAreaVisible(!isTextAreaVisible);
   };
 
   const handleSend = async () => {
+    const currentText = text.trim();
+    if (!currentText) return;
+
+    const userMessage = { text: currentText, sender: 'user' as const };
+    setConversation(prev => [...prev, userMessage]);
+    setText('');
     setIsLoading(true);
+
+    const knowledgeAgentUrl = localStorage.getItem('knowledgeAgentUrl') || 'http://0.0.0.0:8000';
+    const selectedLanguage = localStorage.getItem('language') || 'French'; // Default to French if not set
+
     try {
-      const res = await fetch('http://0.0.0.0:8000/ask-uploaded', {
+      const res = await fetch(knowledgeAgentUrl+"/ask-uploaded", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: text,
-          language: 'French',
+          text: currentText,
+          language: selectedLanguage,
         }),
       });
       const data = await res.json();
-      setResponse(data.response);
+      const apiMessage = { text: data.response, sender: 'api' as const };
+      setConversation(prev => [...prev, apiMessage]);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setResponse('Error fetching data.');
+      const errorMessage = { text: 'Error fetching data.', sender: 'api' as const };
+      setConversation(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -54,18 +74,17 @@ const KnowledgeAgent: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader translucent={false}>
-        <IonToolbar translucent={false} className="no-shadow">
+      <IonHeader>
+        <IonToolbar>
           <IonTitle>Knowledge Agent</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        bla bla
-        {response && (
-          <IonCard className="response-card">
-            <IonCardContent>{response}</IonCardContent>
+      <IonContent className="ion-padding" ref={ionContentRef}>
+        {conversation.map((message, index) => (
+          <IonCard key={index} className={message.sender === 'user' ? 'user-message' : 'api-message'}>
+            <IonCardContent>{message.text}</IonCardContent>
           </IonCard>
-        )}
+        ))}
       </IonContent>
       <IonFooter>
         {isTextAreaVisible && (
@@ -76,7 +95,7 @@ const KnowledgeAgent: React.FC = () => {
               onIonChange={(e) => setText(e.detail.value!)}
             ></IonTextarea>
             <IonButtons slot="end">
-              <IonButton onClick={handleSend} disabled={isLoading}>
+              <IonButton onClick={handleSend} disabled={isLoading || text.trim() === ''}>
                 <IonIcon icon={send}></IonIcon>
               </IonButton>
             </IonButtons>

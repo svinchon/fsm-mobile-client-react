@@ -10,12 +10,29 @@ ion-footer ion-toolbar {
   border-top: 1px solid var(--ion-color-primary);
 }
 
-/* ion-content::part(scroll) {
-  box-shadow: none;
-} */
-
-.response-card {
+.user-message {
   --background: var(--ion-color-light);
   --color: var(--ion-color-dark);
-  margin-top: 16px;
+  width: fit-content;
+  max-width: 80%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding-right: 16px;
+}
+
+.api-message {
+  --background: var(--ion-color-light-shade);
+  --color: var(--ion-color-dark);
+  margin-left: auto;
+  width: fit-content;
+  max-width: 80%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding-left: 16px;
+}
+
+ion-tab-bar {
+  --border-width: 0 !important;
+  --box-shadow: none !important;
+  border-top: 1px solid var(--ion-color-primary);
 }
