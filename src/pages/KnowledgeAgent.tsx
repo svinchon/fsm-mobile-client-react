@@ -103,7 +103,8 @@ const KnowledgeAgent: React.FC = () => {
         )}
         <IonToolbar className="ion-text-center">
           <IonButton onClick={toggleTextArea}>
-            <IonIcon icon={helpOutline} color="light"></IonIcon>
+            Ask Knowledge Agent
+            {/* <IonIcon icon={helpOutline} color="light"></IonIcon> */}
           </IonButton>
         </IonToolbar>
       </IonFooter>

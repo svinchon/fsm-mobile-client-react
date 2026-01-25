@@ -39,13 +39,13 @@ const ServiceRequestsList: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={refresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        <IonHeader collapse="condense">
+        {/* <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">
               Inbox
             </IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <IonList>
           {
             serviceRequests.map(

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './Settings.css';
 
 const Settings: React.FC = () => {
-  const [fsmAppUrl, setFsmAppUrl] = useState('');
+  const [fsmAppConnectorUrl, setFsmAppConnectorUrl] = useState('');
   const [knowledgeAgentUrl, setKnowledgeAgentUrl] = useState('');
   const [language, setLanguage] = useState('English'); // Default language
   const [showToast, setShowToast] = useState(false);
@@ -11,12 +11,12 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     // Load settings from localStorage when the component mounts
-    const savedFsmAppUrl = localStorage.getItem('fsmAppUrl');
+    const savedFsmAppConnectorUrl = localStorage.getItem('fsmAppConnectorUrl');
     const savedKnowledgeAgentUrl = localStorage.getItem('knowledgeAgentUrl');
     const savedLanguage = localStorage.getItem('language');
 
-    if (savedFsmAppUrl) {
-      setFsmAppUrl(savedFsmAppUrl);
+    if (savedFsmAppConnectorUrl) {
+      setFsmAppConnectorUrl(savedFsmAppConnectorUrl);
     }
     if (savedKnowledgeAgentUrl) {
       setKnowledgeAgentUrl(savedKnowledgeAgentUrl);
@@ -27,7 +27,7 @@ const Settings: React.FC = () => {
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('fsmAppUrl', fsmAppUrl);
+    localStorage.setItem('fsmAppConnectorUrl', fsmAppConnectorUrl);
     localStorage.setItem('knowledgeAgentUrl', knowledgeAgentUrl);
     localStorage.setItem('language', language);
     setToastMessage('Settings saved successfully!');
@@ -43,16 +43,16 @@ const Settings: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonItem>
-          <IonLabel position="floating">FSM App URL</IonLabel>
+          <IonLabel position="stacked">FSM App Connector URL</IonLabel>
           <IonInput
-            value={fsmAppUrl}
-            onIonChange={(e) => setFsmAppUrl(e.detail.value!)}
+            value={fsmAppConnectorUrl}
+            onIonChange={(e) => setFsmAppConnectorUrl(e.detail.value!)}
             placeholder="Enter FSM App URL"
           ></IonInput>
         </IonItem>
 
         <IonItem>
-          <IonLabel position="floating">Knowledge Agent URL</IonLabel>
+          <IonLabel position="stacked">Knowledge Agent URL</IonLabel>
           <IonInput
             value={knowledgeAgentUrl}
             onIonChange={(e) => setKnowledgeAgentUrl(e.detail.value!)}
@@ -61,7 +61,7 @@ const Settings: React.FC = () => {
         </IonItem>
 
         <IonItem>
-          <IonLabel>Language</IonLabel>
+          <IonLabel position="stacked">Language</IonLabel>
           <IonSelect
             value={language}
             placeholder="Select Language"
