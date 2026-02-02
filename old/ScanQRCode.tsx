@@ -29,17 +29,18 @@ const ScanQRCode: React.FC = () => {
     // Hide the background to show the camera feed.
 
     // Add listener for scanned barcodes
-    const listener = await BarcodeScanner.addListener(
-      'barcodesScanned',
-      async (result: BarcodesScannedEvent) => {
-        if (result.barcodes.length > 0) {
-          setScannedResult(result.barcodes[0].displayValue);
-        }
-        // Stop scanning once a barcode is detected
-        await stopScan();
-        // TODO: figure out why stopScan does not stop the scan immediately
-      }
-  );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const listener = await BarcodeScanner.addListener(
+    //   'barcodesScanned',
+    //   async (result: BarcodesScannedEvent) => {
+    //     if (result.barcodes.length > 0) {
+    //       setScannedResult(result.barcodes[0].displayValue);
+    //     }
+    //     // Stop scanning once a barcode is detected
+    //     await stopScan();
+    //     // TODO: figure out why stopScan does not stop the scan immediately
+    //   }
+    // );
 
     // Start the scanner
     // On web, we need to pass the video element to the startScan method

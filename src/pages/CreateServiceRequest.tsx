@@ -10,13 +10,13 @@ const CreateServiceRequest: React.FC = () => {
 
   const [customerId, setCustomerId] = useState('');
   const [problemDescription, setProblemDescription] = useState('');
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [touched, setTouched] = useState({
     customerId: false,
     problemDescription: false,
-    password: false
+    // password: false
   });
 
   const [present] = useIonToast();
@@ -47,9 +47,9 @@ const CreateServiceRequest: React.FC = () => {
       if (image.webPath) {
         setImageUrl(image.webPath);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Don't show an error if the user cancelled the action
-      if (error.message !== 'User cancelled photos app') {
+      if (error instanceof Error && error.message !== 'User cancelled photos app') {
         present({ message: `Error taking picture: ${error.message}`, duration: 3000, color: 'danger' });
       }
     }
@@ -62,12 +62,10 @@ const CreateServiceRequest: React.FC = () => {
           <IonTitle>Create Service Request</IonTitle>
         </IonToolbar>
       </IonHeader>
-
       <IonContent className="ion-padding">
-
         {/* Customer Id */}
         <IonItem>
-          <IonLabel position="floating">Customer Id</IonLabel>
+          <IonLabel position="stacked">Customer Id</IonLabel>
           <IonInput
             value={customerId}
             onIonChange={e => setCustomerId(e.detail.value!)}
@@ -80,7 +78,7 @@ const CreateServiceRequest: React.FC = () => {
 
         {/* Problem Description */}
         <IonItem>
-          <IonLabel position="floating">Problem Description</IonLabel>
+          <IonLabel position="stacked">Problem Description</IonLabel>
           <IonTextarea
             rows={5}
             value={problemDescription}

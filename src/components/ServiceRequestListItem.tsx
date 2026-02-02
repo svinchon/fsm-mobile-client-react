@@ -1,7 +1,6 @@
 import {
   IonItem,
   IonLabel,
-  // IonNote
   } from '@ionic/react';
 import { ServiceRequest } from '../data/service-requests';
 import './ServiceRequestListItem.css';

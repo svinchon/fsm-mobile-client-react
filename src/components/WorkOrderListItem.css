@@ -1,0 +1,65 @@
+#work-order-list-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+#work-order-list-item ion-label {
+  margin-top: 12px;
+  margin-bottom: 12px;
+
+  overflow: hidden;
+}
+
+#work-order-list-item ion-label h2 {
+  font-weight: 600;
+  margin: 0;
+
+  /**
+   * With larger font scales
+   * the date/time should wrap to the next
+   * line. However, there should be
+   * space between the name and the date/time
+   * if they can appear on the same line.
+   */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#work-order-list-item p {
+  white-space: nowrap;
+  width: 95%;
+}
+
+#work-order-list-item .date {
+  align-items: center;
+  display: flex;
+}
+
+#work-order-list-item ion-icon {
+  color: #c9c9ca;
+}
+
+#work-order-list-item ion-note {
+  font-size: 0.9375rem;
+  margin-right: 8px;
+  font-weight: normal;
+}
+
+#work-order-list-item ion-note.md {
+  margin-right: 14px;
+}
+
+#work-order-list-item .dot {
+  display: block;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  /* center the dot vertically inside the item */
+  align-self: center;
+  margin: 0 12px 0 12px;
+}
+
+#work-order-list-item .dot-unread {
+  background: var(--ion-color-primary);
+}

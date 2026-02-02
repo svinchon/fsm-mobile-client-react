@@ -19,10 +19,10 @@ const WorkOrderListItem: React.FC<WorkOrderListItemProps> =
           {workOrder.workOrderId}
         </h2>
         <p>
-          {workOrder.subject}
+          {workOrder.assignedTechnician}
         </p>
         <p>
-          {workOrder.description}
+          {workOrder.workorderStatus}
         </p>
       </IonLabel>
     </IonItem>

@@ -13,7 +13,6 @@ import {
   IonCardContent
 } from '@ionic/react';
 import {
-  helpOutline,
   send
 } from 'ionicons/icons';
 import { useState, useEffect, useRef } from 'react';
@@ -33,6 +32,7 @@ const KnowledgeAgent: React.FC = () => {
     }
   }, [conversation]);
 
+
   const toggleTextArea = () => {
     setIsTextAreaVisible(!isTextAreaVisible);
   };
@@ -50,7 +50,7 @@ const KnowledgeAgent: React.FC = () => {
     const selectedLanguage = localStorage.getItem('language') || 'French'; // Default to French if not set
 
     try {
-      const res = await fetch(knowledgeAgentUrl+"/ask-uploaded", {
+      const res = await fetch(knowledgeAgentUrl+"/api/ask-uploaded", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,9 +90,12 @@ const KnowledgeAgent: React.FC = () => {
         {isTextAreaVisible && (
           <IonToolbar>
             <IonTextarea
+              rows={5}
               placeholder="Type your question here..."
+              className={'message-text-area'}
               value={text}
-              onIonChange={(e) => setText(e.detail.value!)}
+              /* onIonChange={(e) => setText(e.detail.value!)*/
+              onIonInput={(e) => setText(e.detail.value!)}
             ></IonTextarea>
             <IonButtons slot="end">
               <IonButton onClick={handleSend} disabled={isLoading || text.trim() === ''}>

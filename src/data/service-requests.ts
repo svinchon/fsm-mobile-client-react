@@ -103,6 +103,6 @@ const serviceRequests: ServiceRequest[] = [
   }
 ];
 
-export const getServiceRequests = () => serviceRequests;
+export const getServiceRequestsInit = () => serviceRequests;
 // getServiceRequests?userEmail=svinchon@rappit.io`;
 export const getServiceRequest = (serviceRequestId: string) => serviceRequests.find(m => m.serviceRequestId === serviceRequestId);

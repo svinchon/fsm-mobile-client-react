@@ -10,6 +10,16 @@ ion-footer ion-toolbar {
   border-top: 1px solid var(--ion-color-primary);
 }
 
+ion-footer ion-toolbar ion-textarea {
+  padding-left: 16px !important;
+  display: flex;
+  align-items: center;
+}
+
+.message-text-area {
+  margin-bottom: 16px;
+}
+
 .user-message {
   --background: var(--ion-color-light);
   --color: var(--ion-color-dark);

@@ -35,7 +35,15 @@ used
 		http://0.0.0.0:8000/docs#/
 
 	LLM
-		Claude
+		Gemini
+	ADB
+		adb start-server
+		adb devices
+	on device/emulator debug
+		npm run build; npx cap sync; npx cap run;
+	emulator debug
+		host is 10.0.2.2
+		internet access needed
 
 researched
 	renommage
