@@ -14,11 +14,12 @@ import { IonReactRouter } from '@ionic/react-router';
 import ServiceRequestsList from './pages/ServiceRequestsList';
 //import ViewMessage from './pages/ViewMessage';
 
-import { library, list, addCircle, settingsOutline } from 'ionicons/icons';
+import { home, library, list, addCircle, settingsOutline } from 'ionicons/icons';
 import CreateServiceRequest from './pages/CreateServiceRequest';
 import WorkOrderList from './pages/WorkOrderList';
 import KnowledgeAgent from './pages/KnowledgeAgent';
 import Settings from './pages/Settings';
+import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -75,44 +76,51 @@ const App: React.FC = () => {
   }, []);
 
   const isTechnician = appMode === 'Technician';
-  const defaultRoute = isTechnician ? '/wol' : '/srl';
+  const defaultRoute = isTechnician ? '/ka' : '/home';
+
+  const routerBase = import.meta.env.BASE_URL ?? '/';
 
   return (
     <IonApp>
-      <IonReactRouter>
+      <IonReactRouter basename={routerBase}>
         <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/">
               <Redirect to={defaultRoute} />
             </Route>
+            <Route exact path="/index.html">
+              <Redirect to={defaultRoute} />
+            </Route>
             {isTechnician ? (
               <>
-              <Route path="/ka"><KnowledgeAgent /></Route>
-              <Route path="/wol"><WorkOrderList /></Route>
+              <Route exact path="/ka"><KnowledgeAgent /></Route>
+              <Route exact path="/wol"><WorkOrderList /></Route>
               <Route exact path="/srl"><ServiceRequestsList /></Route>
               <Route exact path="/csr"><CreateServiceRequest /></Route>
-              <Route path="/settings"><Settings /></Route>
+              <Route exact path="/settings"><Settings /></Route>
               </>
             ) : (
               <>
-              <Route path="/ka"><KnowledgeAgent /></Route>
+              <Route exact path="/home"><Home /></Route>
+              <Route exact path="/ka"><KnowledgeAgent /></Route>
               <Route exact path="/csr"><CreateServiceRequest /></Route>
-              <Route path="/settings"><Settings /></Route>
+              <Route exact path="/settings"><Settings /></Route>
               </>
             )}
           </IonRouterOutlet>
             {isTechnician ? (
               <IonTabBar slot="bottom">
-              <IonTabButton tab="tab4" href="/ka"><IonIcon aria-hidden="true" icon={library} /><IonLabel>K Agent</IonLabel></IonTabButton>
-              <IonTabButton tab="tab3" href="/wol"><IonIcon aria-hidden="true" icon={list} /><IonLabel>WO List</IonLabel></IonTabButton>
-              <IonTabButton tab="tab1" href="/srl"><IonIcon aria-hidden="true" icon={list} /><IonLabel>SR List</IonLabel></IonTabButton>
-              <IonTabButton tab="tab2" href="/csr"><IonIcon aria-hidden="true" icon={addCircle} /><IonLabel>Create SR</IonLabel></IonTabButton>
+              <IonTabButton tab="ka" href="/ka"><IonIcon aria-hidden="true" icon={library} /><IonLabel>K Agent</IonLabel></IonTabButton>
+              <IonTabButton tab="wol" href="/wol"><IonIcon aria-hidden="true" icon={list} /><IonLabel>WO List</IonLabel></IonTabButton>
+              <IonTabButton tab="srl" href="/srl"><IonIcon aria-hidden="true" icon={list} /><IonLabel>SR List</IonLabel></IonTabButton>
+              <IonTabButton tab="csr" href="/csr"><IonIcon aria-hidden="true" icon={addCircle} /><IonLabel>Create SR</IonLabel></IonTabButton>
               <IonTabButton tab="settings" href="/settings"><IonIcon aria-hidden="true" icon={settingsOutline} /><IonLabel>Settings</IonLabel></IonTabButton>
               </IonTabBar>
             ) : (
               <IonTabBar slot="bottom">
-              <IonTabButton tab="tab4" href="/ka"><IonIcon aria-hidden="true" icon={library} /><IonLabel>K Agent</IonLabel></IonTabButton>
-              <IonTabButton tab="tab2" href="/csr"><IonIcon aria-hidden="true" icon={addCircle} /><IonLabel>Create SR</IonLabel></IonTabButton>
+              <IonTabButton tab="home" href="/home"><IonIcon aria-hidden="true" icon={home} /><IonLabel>Home</IonLabel></IonTabButton>
+              <IonTabButton tab="ka" href="/ka"><IonIcon aria-hidden="true" icon={library} /><IonLabel>K Agent</IonLabel></IonTabButton>
+              <IonTabButton tab="csr" href="/csr"><IonIcon aria-hidden="true" icon={addCircle} /><IonLabel>Create SR</IonLabel></IonTabButton>
               <IonTabButton tab="settings" href="/settings"><IonIcon aria-hidden="true" icon={settingsOutline} /><IonLabel>Settings</IonLabel></IonTabButton>
               </IonTabBar>
             )}

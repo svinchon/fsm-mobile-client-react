@@ -34,7 +34,7 @@ const WorkOrders: WorkOrder[] = [
     "technicianMail": "tsivaramakrishnan@rappit.io",
     "requestCompletionTime": "2"
   },
-  {
+  /*{
     "createdBy": "mvharlingen@rappit.io",
     "createdDate": 1768215930913,
     "modifiedBy": "mvharlingen@rappit.io",
@@ -50,7 +50,7 @@ const WorkOrders: WorkOrder[] = [
     "workorderStatus": "ASSIGNED",
     "technicianMail": "tsivaramakrishnan@rappit.io",
     "requestCompletionTime": "2"
-  }
+  }*/
 ];
 
 export const getWorkOrdersInit = () => WorkOrders;

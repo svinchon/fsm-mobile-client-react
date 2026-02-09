@@ -9,6 +9,7 @@ const Settings: React.FC = () => {
   const [fsmAppStatus, setFsmAppStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
   const [fsmUserEmail, setFsmUserEmail] = useState(''); // New state for FSM User Email
   const [knowledgeAgentUrl, setKnowledgeAgentUrl] = useState('');
+  const [kAStatus, setkAStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
   const [appMode, setAppMode] = useState('Customer');
   const [language, setLanguage] = useState('English'); // Default language
   const [showToast, setShowToast] = useState(false);
@@ -106,6 +107,50 @@ const Settings: React.FC = () => {
     }
   };
 
+  function fetchWithTimeout(
+    url: string,
+    options: RequestInit = {},
+    timeoutMs = 10000
+  ) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    return fetch(url, {
+      ...options,
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timer));
+  }
+
+  const handleCheckKAStatus = async () => {
+    if (!knowledgeAgentUrl) {
+      setToastMessage('Please enter the KA URL first.');
+      setShowToast(true);
+      return;
+    }
+    setkAStatus('checking');
+    try {
+      // const response = await fetch(`${knowledgeAgentUrl}`); ///api/checkAppStatus
+      const response = await fetchWithTimeout(
+        `${knowledgeAgentUrl}`
+      );
+      // console.log(response);
+      if (response.ok) {
+        setkAStatus('online');
+        setToastMessage('KA is online.');
+        setShowToast(true);
+      } else {
+        setkAStatus('offline');
+        setToastMessage('KA is offline.');
+        setShowToast(true);
+      }
+    } catch (error) {
+      console.error('Error checking KA status:', error);
+      setkAStatus('offline');
+      setToastMessage('Failed to check KA status: Network error or server not available.');
+      setShowToast(true);
+    }
+  }
+
   const handleCheckFsmAppStatus = async () => {
     if (!fsmAppConnectorUrl) {
       setToastMessage('Please enter the FSM App Connector URL first.');
@@ -114,7 +159,7 @@ const Settings: React.FC = () => {
     }
     setFsmAppStatus('checking');
     try {
-      const response = await fetch(`${fsmAppConnectorUrl}/api/checkAppStatus`);
+      const response = await fetch(`${fsmAppConnectorUrl}`);
       if (response.ok) {
         setFsmAppStatus('online');
         setToastMessage('FSM App is online.');
@@ -167,7 +212,20 @@ const Settings: React.FC = () => {
     }
   };
 
-  const getStatusColor = () => {
+  const getStatusColorKA = () => {
+    switch (kAStatus) {
+      case 'online':
+        return 'success'; // Green
+      case 'offline':
+        return 'danger'; // Red
+      case 'checking':
+        return 'warning'; // Yellow
+      default:
+        return 'medium'; // Gray
+    }
+  };
+
+  const getStatusColorFSMApp = () => {
     switch (fsmAppStatus) {
       case 'online':
         return 'success'; // Green
@@ -213,7 +271,7 @@ const Settings: React.FC = () => {
           <IonButton onClick={handleCheckFsmAppStatus} size="small" slot="end">
             Check Status
           </IonButton>
-          <IonIcon icon={ellipse} color={getStatusColor()} slot="end" style={{ marginRight: '10px' }} />
+          <IonIcon icon={ellipse} color={getStatusColorFSMApp()} slot="end" style={{ marginRight: '10px' }} />
         </IonItem>
 
         <IonItem>
@@ -232,6 +290,14 @@ const Settings: React.FC = () => {
             onIonInput={(e) => setKnowledgeAgentUrl(e.detail.value!)}
             placeholder="Enter Knowledge Agent URL"
           ></IonInput>
+        </IonItem>
+
+        <IonItem>
+          <IonLabel>KA Status</IonLabel>
+          <IonButton onClick={handleCheckKAStatus} size="small" slot="end">
+            Check Status
+          </IonButton>
+          <IonIcon icon={ellipse} color={getStatusColorKA()} slot="end" style={{ marginRight: '10px' }} />
         </IonItem>
 
         <IonItem>

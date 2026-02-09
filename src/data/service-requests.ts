@@ -77,7 +77,7 @@ const serviceRequests: ServiceRequest[] = [
     "equipmentLabelJson":"{}",
     "task_id":"b1c2d3e4-f5a6-7890-1234-567890abcdef"
   },
-  {
+/*  {
     "createdBy":"another@example.com",
     "createdDate":1768211100000,
     "modifiedBy":"another@example.com",
@@ -100,7 +100,7 @@ const serviceRequests: ServiceRequest[] = [
     "undocStatus":"COMPLETED",
     "equipmentLabelJson":"{}",
     "task_id":"c1d2e3f4-a5b6-7890-1234-567890abcdef"
-  }
+  }*/
 ];
 
 export const getServiceRequestsInit = () => serviceRequests;
