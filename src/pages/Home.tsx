@@ -8,6 +8,7 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/react';
+import './Home.css';
 
 const Home: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const Home: React.FC = () => {
 		  <IonTitle>Home</IonTitle>
 		</IonToolbar>
 	  </IonHeader>
-	  <IonContent fullscreen>
+	  <IonContent fullscreen className="home-content">
 		<IonHeader collapse="condense">
 		  <IonToolbar>
 			<IonTitle size="large">Home</IonTitle>

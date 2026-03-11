@@ -51,6 +51,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 import { useEffect, useState } from 'react';
+import { GlobalStatusProvider } from './state/global-status';
+import GlobalStatusBar from './components/GlobalStatusBar';
 
 setupIonicReact();
 
@@ -82,32 +84,33 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      <IonReactRouter basename={routerBase}>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route exact path="/">
-              <Redirect to={defaultRoute} />
-            </Route>
-            <Route exact path="/index.html">
-              <Redirect to={defaultRoute} />
-            </Route>
-            {isTechnician ? (
-              <>
-              <Route exact path="/ka"><KnowledgeAgent /></Route>
-              <Route exact path="/wol"><WorkOrderList /></Route>
-              <Route exact path="/srl"><ServiceRequestsList /></Route>
-              <Route exact path="/csr"><CreateServiceRequest /></Route>
-              <Route exact path="/settings"><Settings /></Route>
-              </>
-            ) : (
-              <>
-              <Route exact path="/home"><Home /></Route>
-              <Route exact path="/ka"><KnowledgeAgent /></Route>
-              <Route exact path="/csr"><CreateServiceRequest /></Route>
-              <Route exact path="/settings"><Settings /></Route>
-              </>
-            )}
-          </IonRouterOutlet>
+      <GlobalStatusProvider>
+        <IonReactRouter basename={routerBase}>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/">
+                <Redirect to={defaultRoute} />
+              </Route>
+              <Route exact path="/index.html">
+                <Redirect to={defaultRoute} />
+              </Route>
+              {isTechnician ? (
+                <>
+                <Route exact path="/ka"><KnowledgeAgent /></Route>
+                <Route exact path="/wol"><WorkOrderList /></Route>
+                <Route exact path="/srl"><ServiceRequestsList /></Route>
+                <Route exact path="/csr"><CreateServiceRequest /></Route>
+                <Route exact path="/settings"><Settings /></Route>
+                </>
+              ) : (
+                <>
+                <Route exact path="/home"><Home /></Route>
+                <Route exact path="/ka"><KnowledgeAgent /></Route>
+                <Route exact path="/csr"><CreateServiceRequest /></Route>
+                <Route exact path="/settings"><Settings /></Route>
+                </>
+              )}
+            </IonRouterOutlet>
             {isTechnician ? (
               <IonTabBar slot="bottom">
               <IonTabButton tab="ka" href="/ka"><IonIcon aria-hidden="true" icon={library} /><IonLabel>K Agent</IonLabel></IonTabButton>
@@ -124,9 +127,11 @@ const App: React.FC = () => {
               <IonTabButton tab="settings" href="/settings"><IonIcon aria-hidden="true" icon={settingsOutline} /><IonLabel>Settings</IonLabel></IonTabButton>
               </IonTabBar>
             )}
+            <GlobalStatusBar />
 
-        </IonTabs>
-      </IonReactRouter>
+          </IonTabs>
+        </IonReactRouter>
+      </GlobalStatusProvider>
     </IonApp>
   );
 };

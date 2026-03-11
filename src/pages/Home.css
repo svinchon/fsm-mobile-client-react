@@ -1,0 +1,9 @@
+.home-content {
+  --background: url('../assets/B3W2.png') center / 60% auto no-repeat fixed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-content {
+    --background: url('../assets/B3B2.png') center / 60% auto no-repeat fixed;
+  }
+}

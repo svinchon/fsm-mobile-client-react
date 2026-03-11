@@ -1,0 +1,48 @@
+:root {
+  --global-status-height: 34px;
+}
+
+.global-status-bar {
+  --min-height: var(--global-status-height);
+  --background: #ffffff;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--ion-color-primary);
+}
+
+.global-status-bar__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+
+ion-tab-bar {
+  bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}
+
+.global-status-bar.toolbar-background {
+  opacity: 0.95;
+}
+
+ion-content {
+  --padding-bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}
+
+ion-content::part(scroll) {
+  padding-bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}
+
+ion-fab[vertical="bottom"] {
+  bottom: calc(var(--global-status-height) + 16px + env(safe-area-inset-bottom));
+}
+
+ion-footer {
+  padding-bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}

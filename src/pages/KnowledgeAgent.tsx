@@ -17,14 +17,20 @@ import {
 } from 'ionicons/icons';
 import { useState, useEffect, useRef } from 'react';
 import './KnowledgeAgent.css';
+import { fetchWithTimeout } from '../utils/http';
+
+// display status component
+import { useGlobalStatus } from '../state/global-status';
 
 const KnowledgeAgent: React.FC = () => {
-  const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const [text, setText] = useState('');
   const [conversation, setConversation] = useState<{text: string, sender: 'user' | 'api'}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const ionContentRef = useRef<HTMLIonContentElement>(null);
+
+  // gives access to methods allowing to display status
+  const { setStatus, clearStatus } = useGlobalStatus();
 
   useEffect(() => {
     if (ionContentRef.current) {
@@ -32,10 +38,6 @@ const KnowledgeAgent: React.FC = () => {
     }
   }, [conversation]);
 
-
-  const toggleTextArea = () => {
-    setIsTextAreaVisible(!isTextAreaVisible);
-  };
 
   const handleSend = async () => {
     const currentText = text.trim();
@@ -50,6 +52,7 @@ const KnowledgeAgent: React.FC = () => {
     const selectedLanguage = localStorage.getItem('language') || 'French'; // Default to French if not set
 
     try {
+      setStatus('Processing your question...', 'medium', 10000, true);
       const res = await fetch(knowledgeAgentUrl+"/api/ask-uploaded", {
         method: 'POST',
         headers: {
@@ -60,6 +63,7 @@ const KnowledgeAgent: React.FC = () => {
           language: selectedLanguage,
         }),
       });
+      clearStatus();
       const data = await res.json();
       const apiMessage = { text: data.response, sender: 'api' as const };
       setConversation(prev => [...prev, apiMessage]);
@@ -79,7 +83,7 @@ const KnowledgeAgent: React.FC = () => {
           <IonTitle>Knowledge Agent</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding" ref={ionContentRef}>
+      <IonContent className="ion-padding knowledge-agent-content" ref={ionContentRef}>
         {conversation.map((message, index) => (
           <IonCard key={index} className={message.sender === 'user' ? 'user-message' : 'api-message'}>
             <IonCardContent>{message.text}</IonCardContent>
@@ -87,28 +91,20 @@ const KnowledgeAgent: React.FC = () => {
         ))}
       </IonContent>
       <IonFooter>
-        {isTextAreaVisible && (
-          <IonToolbar>
-            <IonTextarea
-              rows={5}
-              placeholder="Type your question here..."
-              className={'message-text-area'}
-              value={text}
-              /* onIonChange={(e) => setText(e.detail.value!)*/
-              onIonInput={(e) => setText(e.detail.value!)}
-            ></IonTextarea>
-            <IonButtons slot="end">
-              <IonButton onClick={handleSend} disabled={isLoading || text.trim() === ''}>
-                <IonIcon icon={send}></IonIcon>
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        )}
-        <IonToolbar className="ion-text-center">
-          <IonButton onClick={toggleTextArea}>
-            Ask Knowledge Agent
-            {/* <IonIcon icon={helpOutline} color="light"></IonIcon> */}
-          </IonButton>
+        <IonToolbar>
+          <IonTextarea
+            rows={5}
+            placeholder="Type your question here..."
+            className={'message-text-area'}
+            value={text}
+            /* onIonChange={(e) => setText(e.detail.value!)*/
+            onIonInput={(e) => setText(e.detail.value!)}
+          ></IonTextarea>
+          <IonButtons slot="end">
+            <IonButton onClick={handleSend} disabled={isLoading || text.trim() === ''}>
+              <IonIcon icon={send}></IonIcon>
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonFooter>
     </IonPage>

@@ -16,6 +16,16 @@ ion-footer ion-toolbar ion-textarea {
   align-items: center;
 }
 
+.knowledge-agent-content {
+  --background: url('../assets/B4W2.png') center / 60% auto no-repeat fixed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .knowledge-agent-content {
+    --background: url('../assets/B4B2.png') center / 60% auto no-repeat fixed;
+  }
+}
+
 .message-text-area {
   margin-bottom: 16px;
 }

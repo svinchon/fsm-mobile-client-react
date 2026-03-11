@@ -1,1 +1,7 @@
+.list-with-status-bar {
+  padding-bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}
 
+.content-with-status-bar {
+  --padding-bottom: calc(var(--global-status-height) + env(safe-area-inset-bottom));
+}

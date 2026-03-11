@@ -9,6 +9,8 @@ import {
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { useEffect, useState } from 'react';
 import './CreateServiceRequest.css';
+import { fetchWithTimeout } from '../utils/http';
+import { useGlobalStatus } from '../state/global-status';
 
 const CreateServiceRequest: React.FC = () => {
 
@@ -18,6 +20,7 @@ const CreateServiceRequest: React.FC = () => {
   const [fsmDeployedAppName, setFsmDeployedAppName] = useState('');
   const [fsmAppConnectorUrl, setFsmAppConnectorUrl] = useState('');
   const [fsmUserEmail, setFsmUserEmail] = useState('');
+  const { setStatus, clearStatus } = useGlobalStatus();
 
   const [touched, setTouched] = useState({
     customerId: false,
@@ -54,7 +57,7 @@ const CreateServiceRequest: React.FC = () => {
     }
 
     try {
-      const imageResponse = await fetch(imageUrl);
+      const imageResponse = await fetchWithTimeout(imageUrl);
       const imageBlob = await imageResponse.blob();
       const mimeType = imageBlob.type || 'image/jpeg';
       const ext = mimeType.includes('/') ? mimeType.split('/')[1] : 'jpg';
@@ -75,6 +78,7 @@ const CreateServiceRequest: React.FC = () => {
       const formData = new FormData();
       formData.append('picture', pictureFile);
 
+      setStatus('Creating service request...', 'medium', 10000, true);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -84,14 +88,12 @@ const CreateServiceRequest: React.FC = () => {
       });
 
       if (response.ok) {
-        present({ message: 'Service request created successfully.', duration: 2000, color: 'success' });
+        setStatus('Service request created successfully...', 'medium', 10000, true);
+
+        // present({ message: 'Service request created successfully.', duration: 2000, color: 'success' });
       } else {
         const errorText = await response.text();
-        present({
-          message: `Create request failed: ${errorText || response.status}`,
-          duration: 3000,
-          color: 'danger'
-        });
+        present({ message: `Create request failed: ${errorText || response.status}`, duration: 3000, color: 'danger' });
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';

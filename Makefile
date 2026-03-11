@@ -7,3 +7,4 @@ publish_to_cloud_run_projet:
 	mkdir -p ${TARGET_DIR}
 	cp -rf dist/* ${TARGET_DIR}
 #	sed -i '' 's|="/|="/ionic/|g' ${TARGET_DIR}/index.html
+

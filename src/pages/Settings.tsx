@@ -2,11 +2,13 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel
 import { useState, useEffect, useCallback } from 'react';
 import { refresh, ellipse } from 'ionicons/icons';
 import './Settings.css';
+import { fetchWithTimeout } from '../utils/http';
 
 const Settings: React.FC = () => {
   const [fsmDeployedAppName, setFsmDeployedAppName] = useState('');
   const [fsmAppConnectorUrl, setFsmAppConnectorUrl] = useState('');
-  const [fsmAppStatus, setFsmAppStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
+  const [fsmStatus, setFsmStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
+  const [fsmAppConnectorStatus, setfsmAppConnectorStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
   const [fsmUserEmail, setFsmUserEmail] = useState(''); // New state for FSM User Email
   const [knowledgeAgentUrl, setKnowledgeAgentUrl] = useState('');
   const [kAStatus, setkAStatus] = useState<'online' | 'offline' | 'checking' | null>(null);
@@ -22,7 +24,7 @@ const Settings: React.FC = () => {
     setShowToast(true);
     const listUrl = `${knowledgeAgentUrl}/api/list-uploads`;
     try {
-      const response = await fetch(listUrl);
+      const response = await fetchWithTimeout(listUrl);
       if (response.ok) {
         const data = await response.json();
         setUploadedFiles(data.files);
@@ -107,20 +109,6 @@ const Settings: React.FC = () => {
     }
   };
 
-  function fetchWithTimeout(
-    url: string,
-    options: RequestInit = {},
-    timeoutMs = 10000
-  ) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-    return fetch(url, {
-      ...options,
-      signal: controller.signal,
-    }).finally(() => clearTimeout(timer));
-  }
-
   const handleCheckKAStatus = async () => {
     if (!knowledgeAgentUrl) {
       setToastMessage('Please enter the KA URL first.');
@@ -130,9 +118,7 @@ const Settings: React.FC = () => {
     setkAStatus('checking');
     try {
       // const response = await fetch(`${knowledgeAgentUrl}`); ///api/checkAppStatus
-      const response = await fetchWithTimeout(
-        `${knowledgeAgentUrl}`
-      );
+      const response = await fetchWithTimeout(`${knowledgeAgentUrl}`);
       // console.log(response);
       if (response.ok) {
         setkAStatus('online');
@@ -151,27 +137,27 @@ const Settings: React.FC = () => {
     }
   }
 
-  const handleCheckFsmAppStatus = async () => {
+  const handleCheckfsmAppConnectorStatus = async () => {
     if (!fsmAppConnectorUrl) {
       setToastMessage('Please enter the FSM App Connector URL first.');
       setShowToast(true);
       return;
     }
-    setFsmAppStatus('checking');
+    setfsmAppConnectorStatus('checking');
     try {
-      const response = await fetch(`${fsmAppConnectorUrl}`);
+      const response = await fetchWithTimeout(`${fsmAppConnectorUrl}`);
       if (response.ok) {
-        setFsmAppStatus('online');
+        setfsmAppConnectorStatus('online');
         setToastMessage('FSM App is online.');
         setShowToast(true);
       } else {
-        setFsmAppStatus('offline');
+        setfsmAppConnectorStatus('offline');
         setToastMessage('FSM App is offline.');
         setShowToast(true);
       }
     } catch (error) {
       console.error('Error checking FSM App status:', error);
-      setFsmAppStatus('offline');
+      setfsmAppConnectorStatus('offline');
       setToastMessage('Failed to check FSM App status: Network error or server not available.');
       setShowToast(true);
     }
@@ -191,7 +177,7 @@ const Settings: React.FC = () => {
     try {
       setToastMessage(`Upload in progress`);
       setShowToast(true);
-      const response = await fetch(uploadUrl, {
+      const response = await fetchWithTimeout(uploadUrl, {
         method: 'POST',
         body: formData,
       });
@@ -225,8 +211,70 @@ const Settings: React.FC = () => {
     }
   };
 
-  const getStatusColorFSMApp = () => {
-    switch (fsmAppStatus) {
+  const handleCheckFsmStatus = async () => {
+    if (!fsmDeployedAppName) {
+      setToastMessage('Please enter the FSM Deployed App Name first.');
+      setShowToast(true);
+      return;
+    }
+    setFsmStatus('checking');
+    try {
+      const response = await fetchWithTimeout(`https://${fsmDeployedAppName}.europe-west1.run.app/actuator/healthz`);
+      if (!response.ok) {
+        setFsmStatus('offline');
+        setToastMessage('FSM is offline.');
+        setShowToast(true);
+        return;
+      }
+      let isJson = false;
+      try {
+        await response.clone().json();
+        isJson = true;
+      } catch {
+        const text = await response.text();
+        const jsonStart = text.indexOf('{');
+        const jsonEnd = text.lastIndexOf('}');
+        if (jsonStart !== -1 && jsonEnd > jsonStart) {
+          try {
+            JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+            isJson = true;
+          } catch {
+            isJson = false;
+          }
+        }
+      }
+      if (isJson) {
+        setFsmStatus('online');
+        setToastMessage('FSM is online.');
+        setShowToast(true);
+      } else {
+        setFsmStatus('offline');
+        setToastMessage('FSM is offline (invalid JSON response).');
+        setShowToast(true);
+      }
+    } catch (error) {
+      console.error('Error checking FSM status:', error);
+      setFsmStatus('offline');
+      setToastMessage('Failed to check FSM status: Network error or server not available.');
+      setShowToast(true);
+    }
+  };
+
+  const getStatusColorFsm = () => {
+    switch (fsmStatus) {
+      case 'online':
+        return 'success'; // Green
+      case 'offline':
+        return 'danger'; // Red
+      case 'checking':
+        return 'warning'; // Yellow
+      default:
+        return 'medium'; // Gray
+    }
+  };
+
+  const getStatusColorfsmAppConnector = () => {
+    switch (fsmAppConnectorStatus) {
       case 'online':
         return 'success'; // Green
       case 'offline':
@@ -258,6 +306,14 @@ const Settings: React.FC = () => {
         </IonItem>
 
         <IonItem>
+          <IonLabel>FSM Status</IonLabel>
+          <IonButton onClick={handleCheckFsmStatus} size="small" slot="end">
+            Check Status
+          </IonButton>
+          <IonIcon icon={ellipse} color={getStatusColorFsm()} slot="end" style={{ marginRight: '10px' }} />
+        </IonItem>
+
+        <IonItem>
           <IonLabel position="stacked">FSM App Connector URL</IonLabel>
           <IonInput
             value={fsmAppConnectorUrl}
@@ -267,11 +323,11 @@ const Settings: React.FC = () => {
         </IonItem>
 
         <IonItem>
-          <IonLabel>FSM App Status</IonLabel>
-          <IonButton onClick={handleCheckFsmAppStatus} size="small" slot="end">
+          <IonLabel>FSM App Connector Status</IonLabel>
+          <IonButton onClick={handleCheckfsmAppConnectorStatus} size="small" slot="end">
             Check Status
           </IonButton>
-          <IonIcon icon={ellipse} color={getStatusColorFSMApp()} slot="end" style={{ marginRight: '10px' }} />
+          <IonIcon icon={ellipse} color={getStatusColorfsmAppConnector()} slot="end" style={{ marginRight: '10px' }} />
         </IonItem>
 
         <IonItem>
@@ -357,6 +413,8 @@ const Settings: React.FC = () => {
           message={toastMessage}
           duration={2000}
           color="success"
+          position="top"
+          cssClass="narrow-toast"
         />
       </IonContent>
     </IonPage>
