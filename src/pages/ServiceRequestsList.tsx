@@ -26,7 +26,10 @@ import './ServiceRequestsList.css';
 // functional component
 const ServiceRequestsList: React.FC = () => {
 
-  const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>([]);
+  const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>(() => {
+    const cached = sessionStorage.getItem('serviceRequests');
+    return cached ? JSON.parse(cached) : [];
+  });
 
   // gives access to display toast message
   const [present] = useIonToast();
@@ -67,7 +70,9 @@ const ServiceRequestsList: React.FC = () => {
       const response = await fetchWithTimeout(url);
       if (response.ok) {
         //const data = await response.json();
-        setServiceRequests(await response.json());
+        const data = await response.json();
+        sessionStorage.setItem('serviceRequests', JSON.stringify(data));
+        setServiceRequests(data);
         setStatus("Service Requests retrieved");
       } else {
         // present({ message: 'Failed to fetch service requests.', duration: 3000, color: 'danger' });
@@ -80,9 +85,10 @@ const ServiceRequestsList: React.FC = () => {
   }, [present]);
 
   useEffect(() => {
-    setServiceRequests(getServiceRequestsInit());
-    fetchServiceRequests();
-  }, [fetchServiceRequests]);
+    if (!sessionStorage.getItem('serviceRequests')) {
+      setServiceRequests(getServiceRequestsInit());
+    }
+  }, []);
 
   const handleRefresh = (e: CustomEvent) => {
     fetchServiceRequests().then(() => e.detail.complete());

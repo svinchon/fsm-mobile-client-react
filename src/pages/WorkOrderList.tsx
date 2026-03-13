@@ -12,7 +12,10 @@ import { useGlobalStatus } from '../state/global-status';
 
 const WorkOrderList: React.FC = () => {
 
-  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>(() => {
+    const cached = sessionStorage.getItem('workOrders');
+    return cached ? JSON.parse(cached) : [];
+  });
   const [present] = useIonToast();
     const { setStatus, clearStatus } = useGlobalStatus();
 
@@ -46,6 +49,7 @@ const WorkOrderList: React.FC = () => {
       if (response.ok) {
         setStatus('Work orders retrieved.');
         const data = await response.json();
+        sessionStorage.setItem('workOrders', JSON.stringify(data));
         setWorkOrders(data);
         //console.log('Fetched work orders:', data);
       } else {
@@ -60,9 +64,10 @@ const WorkOrderList: React.FC = () => {
   }, [present]);
 
   useEffect(() => {
-    setWorkOrders(getWorkOrdersInit());
-    fetchWorkOrders();
-  }, [fetchWorkOrders]);
+    if (!sessionStorage.getItem('workOrders')) {
+      setWorkOrders(getWorkOrdersInit());
+    }
+  }, []);
 
   const handleRefresh = (e: CustomEvent) => {
     fetchWorkOrders().then(() => e.detail.complete());

@@ -94,22 +94,12 @@ const App: React.FC = () => {
               <Route exact path="/index.html">
                 <Redirect to={defaultRoute} />
               </Route>
-              {isTechnician ? (
-                <>
-                <Route exact path="/ka"><KnowledgeAgent /></Route>
-                <Route exact path="/wol"><WorkOrderList /></Route>
-                <Route exact path="/srl"><ServiceRequestsList /></Route>
-                <Route exact path="/csr"><CreateServiceRequest /></Route>
-                <Route exact path="/settings"><Settings /></Route>
-                </>
-              ) : (
-                <>
-                <Route exact path="/home"><Home /></Route>
-                <Route exact path="/ka"><KnowledgeAgent /></Route>
-                <Route exact path="/csr"><CreateServiceRequest /></Route>
-                <Route exact path="/settings"><Settings /></Route>
-                </>
-              )}
+              <Route exact path="/ka"><KnowledgeAgent /></Route>
+              <Route exact path="/wol"><WorkOrderList /></Route>
+              <Route exact path="/srl"><ServiceRequestsList /></Route>
+              <Route exact path="/csr"><CreateServiceRequest /></Route>
+              <Route exact path="/settings"><Settings /></Route>
+              <Route exact path="/home"><Home /></Route>
             </IonRouterOutlet>
             {isTechnician ? (
               <IonTabBar slot="bottom">
