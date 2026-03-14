@@ -4,40 +4,41 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonFooter,
-  IonButton,
   IonIcon,
   IonTextarea,
   IonButtons,
+  IonMenuButton,
   IonCard,
   IonCardContent
 } from '@ionic/react';
-import {
-  send
-} from 'ionicons/icons';
+import { sendOutline, attachOutline, trashOutline } from 'ionicons/icons';
 import { useState, useEffect, useRef } from 'react';
 import './KnowledgeAgent.css';
-import { fetchWithTimeout } from '../utils/http';
-
-// display status component
+import { useTranslation } from 'react-i18next';
 import { useGlobalStatus } from '../state/global-status';
+import rappitLogo from '../svg/rappit.svg';
 
 const KnowledgeAgent: React.FC = () => {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
   const [conversation, setConversation] = useState<{text: string, sender: 'user' | 'api'}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const ionContentRef = useRef<HTMLIonContentElement>(null);
-
-  // gives access to methods allowing to display status
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { setStatus, clearStatus } = useGlobalStatus();
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setImageUrl(URL.createObjectURL(file));
+  };
+
   useEffect(() => {
-    if (ionContentRef.current) {
-      ionContentRef.current.scrollToBottom(300);
+    if (conversationRef.current) {
+      conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
     }
   }, [conversation]);
-
 
   const handleSend = async () => {
     const currentText = text.trim();
@@ -49,28 +50,23 @@ const KnowledgeAgent: React.FC = () => {
     setIsLoading(true);
 
     const knowledgeAgentUrl = localStorage.getItem('knowledgeAgentUrl') || 'http://0.0.0.0:8000';
-    const selectedLanguage = localStorage.getItem('language') || 'French'; // Default to French if not set
+    const selectedLanguage = localStorage.getItem('language') || 'French';
 
     try {
       setStatus('Processing your question...', 'medium', 10000, true);
-      const res = await fetch(knowledgeAgentUrl+"/api/ask-uploaded", {
+      const res = await fetch(knowledgeAgentUrl + '/api/ask-uploaded', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: currentText,
-          language: selectedLanguage,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: currentText, language: selectedLanguage }),
       });
       clearStatus();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      const apiMessage = { text: data.response, sender: 'api' as const };
-      setConversation(prev => [...prev, apiMessage]);
+      setConversation(prev => [...prev, { text: data.response, sender: 'api' as const }]);
     } catch (error) {
+      clearStatus();
       console.error('Error fetching data:', error);
-      const errorMessage = { text: 'Error fetching data.', sender: 'api' as const };
-      setConversation(prev => [...prev, errorMessage]);
+      setConversation(prev => [...prev, { text: 'Error fetching data.', sender: 'api' as const }]);
     } finally {
       setIsLoading(false);
     }
@@ -80,33 +76,65 @@ const KnowledgeAgent: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Knowledge Agent</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className="ion-padding knowledge-agent-content" ref={ionContentRef}>
-        {conversation.map((message, index) => (
-          <IonCard key={index} className={message.sender === 'user' ? 'user-message' : 'api-message'}>
-            <IonCardContent>{message.text}</IonCardContent>
-          </IonCard>
-        ))}
-      </IonContent>
-      <IonFooter>
-        <IonToolbar>
-          <IonTextarea
-            rows={5}
-            placeholder="Type your question here..."
-            className={'message-text-area'}
-            value={text}
-            /* onIonChange={(e) => setText(e.detail.value!)*/
-            onIonInput={(e) => setText(e.detail.value!)}
-          ></IonTextarea>
+          <IonTitle>{t('knowledge-agent.title')}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={handleSend} disabled={isLoading || text.trim() === ''}>
-              <IonIcon icon={send}></IonIcon>
-            </IonButton>
+            <IonMenuButton />
           </IonButtons>
         </IonToolbar>
-      </IonFooter>
+      </IonHeader>
+      <IonContent scrollY={false}>
+        <div className="ka-layout">
+
+          <div className="ka-top knowledge-agent-content" ref={conversationRef}>
+            {conversation.length === 0 ? (
+              <div className="ka-welcome">
+                <img src={rappitLogo} alt="Rappit" style={{ width: '120px' }} />
+                <h2>{t('knowledge-agent.welcome_message')}</h2>
+              </div>
+            ) : (
+              conversation.map((message, index) => (
+                <IonCard key={index} className={message.sender === 'user' ? 'user-message' : 'api-message'}>
+                  <IonCardContent>{message.text}</IonCardContent>
+                </IonCard>
+              ))
+            )}
+          </div>
+
+          <div className="ka-bottom">
+            <div className="ka-input-box">
+              <IonTextarea
+                rows={4}
+                placeholder="Type your question here..."
+                value={text}
+                onIonInput={(e) => setText(e.detail.value!)}
+                style={{ '--padding-start': '4px' }}
+              />
+              {imageUrl && (
+                <div className="ka-thumb-wrapper">
+                  <img src={imageUrl} alt="selected" className="ka-thumb" />
+                  <button className="ka-thumb-delete" onClick={() => setImageUrl(null)}>
+                    <IonIcon icon={trashOutline} />
+                  </button>
+                </div>
+              )}
+              <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={handleFileChange} />
+              <div className="ka-input-actions">
+                <button className="ka-icon-btn" onClick={() => fileInputRef.current?.click()}>
+                  <IonIcon icon={attachOutline} style={{ fontSize: '2.1rem', transform: 'rotate(45deg)', display: 'block' }} />
+                </button>
+                <button
+                  className={`ka-icon-btn ka-send-btn${isLoading || text.trim() === '' ? ' ka-send-disabled' : ''}`}
+                  onClick={handleSend}
+                  disabled={isLoading || text.trim() === ''}
+                >
+                  <IonIcon icon={sendOutline} style={{ fontSize: '1.7rem', transform: 'rotate(-45deg) translate(4px, -2px)', display: 'block' }} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </IonContent>
     </IonPage>
   );
 };

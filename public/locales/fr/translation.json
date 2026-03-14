@@ -1,0 +1,69 @@
+{
+  "home": {
+    "title": "Accueil",
+    "welcome_message": "Comment puis-je vous aider aujourd'hui ?",
+    "customer_page_description": "Ceci est la page d'accueil pour les clients."
+  },
+  "knowledge-agent": {
+    "title": "Knowledge Agent",
+    "welcome_message": "Comment puis-je vous aider aujourd'hui ?",
+    "customer_page_description": "Ceci est la page d'accueil pour les clients."
+  },
+  "tabs": {
+    "requests": "Demandes",
+    "account": "Compte"
+  },
+  "account": {
+    "title": "Compte",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "email": "Email",
+    "save": "Enregistrer"
+  },
+  "srl": {
+    "new": "Nouvelle Demande",
+    "page_title": "Demandes de service"
+  },
+  "csr": {
+    "page_title": "Créer une demande",
+    "title": "Décrivez votre demande",
+    "subtitle": "Joignez une ou plusieurs photos si possible",
+    "placeholder": "...",
+    "toast_no_photo": "Veuillez prendre une photo d'abord.",
+    "toast_no_settings": "Veuillez configurer les paramètres FSM d'abord.",
+    "toast_failed": "Échec de la création : {{error}}",
+    "toast_camera_error": "Erreur lors de la prise de photo : {{error}}"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "fsm_app_name": "Nom de l'application FSM déployée",
+    "fsm_status": "Statut FSM",
+    "fsm_connector_url": "URL du connecteur FSM",
+    "fsm_connector_status": "Statut du connecteur FSM",
+    "rappit_user_email": "Email utilisateur Rappit",
+    "test_mode": "Mode test",
+    "ka_url": "URL de l'agent de connaissance",
+    "ka_status": "Statut KA",
+    "check_status": "Vérifier",
+    "language": "Langue",
+    "primary_color": "Couleur principale",
+    "app_mode": "Mode application",
+    "save": "Enregistrer",
+    "uploaded_docs": "Documents téléversés",
+    "upload_pdf": "Téléverser PDF",
+    "customer": "Client",
+    "technician": "Technicien",
+    "toast_saved": "Paramètres enregistrés !",
+    "toast_select_file": "Veuillez sélectionner un fichier.",
+    "toast_upload_ok": "Fichier téléversé avec succès !",
+    "toast_ka_online": "KA en ligne.",
+    "toast_ka_offline": "KA hors ligne.",
+    "toast_fsm_online": "FSM en ligne.",
+    "toast_fsm_offline": "FSM hors ligne.",
+    "toast_enter_ka_url": "Veuillez saisir l'URL du KA d'abord.",
+    "toast_enter_fsm_name": "Veuillez saisir le nom de l'application FSM d'abord.",
+    "toast_enter_connector_url": "Veuillez saisir l'URL du connecteur FSM d'abord.",
+    "section_general": "Général",
+    "section_ka": "Knowledge Agent"
+  }
+}

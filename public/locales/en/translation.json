@@ -1,0 +1,69 @@
+{
+  "home": {
+    "title": "Home",
+    "welcome_message": "How can I help you today?",
+    "customer_page_description": "This is the home page for customers."
+  },
+  "knowledge-agent": {
+    "title": "Knowledge Agent",
+    "welcome_message": "How can I help you today?",
+    "customer_page_description": "This is the home page for customers."
+  },
+  "tabs": {
+    "requests": "Requests",
+    "account": "Account"
+  },
+  "account": {
+    "title": "Account",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "save": "Save"
+  },
+  "srl": {
+    "new": "New Request",
+    "page_title": "Service Requests"
+  },
+  "csr": {
+    "page_title": "Create Service Request",
+    "title": "Describe your request",
+    "subtitle": "Attach one or more photos if possible",
+    "placeholder": "...",
+    "toast_no_photo": "Please take a picture first.",
+    "toast_no_settings": "Please set FSM settings first.",
+    "toast_failed": "Create request failed: {{error}}",
+    "toast_camera_error": "Error taking picture: {{error}}"
+  },
+  "settings": {
+    "title": "Settings",
+    "fsm_app_name": "FSM Deployed App Name",
+    "fsm_status": "FSM Status",
+    "fsm_connector_url": "FSM App Connector URL",
+    "fsm_connector_status": "FSM App Connector Status",
+    "rappit_user_email": "Rappit User Email",
+    "test_mode": "Test Mode",
+    "ka_url": "Knowledge Agent URL",
+    "ka_status": "KA Status",
+    "check_status": "Check Status",
+    "language": "Language",
+    "primary_color": "Primary Color",
+    "app_mode": "App Mode",
+    "save": "Save Settings",
+    "uploaded_docs": "Uploaded Documents",
+    "upload_pdf": "Upload PDF",
+    "customer": "Customer",
+    "technician": "Technician",
+    "toast_saved": "Settings saved successfully!",
+    "toast_select_file": "Please select a file to upload.",
+    "toast_upload_ok": "File uploaded successfully!",
+    "toast_ka_online": "KA is online.",
+    "toast_ka_offline": "KA is offline.",
+    "toast_fsm_online": "FSM is online.",
+    "toast_fsm_offline": "FSM is offline.",
+    "toast_enter_ka_url": "Please enter the KA URL first.",
+    "toast_enter_fsm_name": "Please enter the FSM Deployed App Name first.",
+    "toast_enter_connector_url": "Please enter the FSM App Connector URL first.",
+    "section_general": "General",
+    "section_ka": "Knowledge Agent"
+  }
+}

@@ -1,2 +1,11 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+  --app-primary-color: #1E6EDA;
+  --ion-color-primary: var(--app-primary-color);
+}
+
+ion-tab-button {
+  --color-selected: var(--app-primary-color);
+}

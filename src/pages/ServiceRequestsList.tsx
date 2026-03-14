@@ -5,10 +5,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { ServiceRequest, getServiceRequestsInit } from '../data/service-requests';
 
 // Ionic components
-import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar, useIonToast, IonFab, IonFabButton, IonIcon } from '@ionic/react';
-
-// Ionic icons
-import { refresh as refreshIcon } from 'ionicons/icons';
+import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar, useIonToast, IonButtons, IonMenuButton, IonFooter, IonButton } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // fetch with timeout method
 import { fetchWithTimeout } from '../utils/http';
@@ -35,7 +34,9 @@ const ServiceRequestsList: React.FC = () => {
   const [present] = useIonToast();
 
   // gives access to methods allowing to display status
-  const { setStatus, clearStatus } = useGlobalStatus();
+  const { setStatus } = useGlobalStatus();
+  const history = useHistory();
+  const { t } = useTranslation();
 
   // function fetch service request
   // use call back prevents actual call if input didn't change?
@@ -43,16 +44,17 @@ const ServiceRequestsList: React.FC = () => {
 
     // get settings from local storage
     const fsmAppConnectorUrl = localStorage.getItem('fsmAppConnectorUrl');
-    const fsmUserEmail = localStorage.getItem('fsmUserEmail');
+    const rappitUserEmail = localStorage.getItem('rappitUserEmail');
     const fsmDeployedAppName = localStorage.getItem('fsmDeployedAppName');
+    const isTestMode = localStorage.getItem('isTestMode') === 'true';
 
     // diplay message if wrong configuration
     if (!fsmAppConnectorUrl) {
       present({ message: 'FSM App Connector URL is not configured in settings.', duration: 3000, color: 'danger' });
       return;
     }
-    if (!fsmUserEmail) {
-      present({ message: 'FSM User Email is not configured in settings.', duration: 3000, color: 'danger' });
+    if (!rappitUserEmail) {
+      present({ message: 'Rappit User Email is not configured in settings.', duration: 3000, color: 'danger' });
       return;
     }
     if (!fsmDeployedAppName) {
@@ -63,7 +65,8 @@ const ServiceRequestsList: React.FC = () => {
     try {
       let url = `${fsmAppConnectorUrl}/api/getServiceRequests?`;
       url = url + `&deployedAppName=${fsmDeployedAppName}`;
-      url = url + `&userEmail=${fsmUserEmail}`;
+      url = url + `&rappitUserEmail=${rappitUserEmail}`;
+      url = url + `&isTestMode=${isTestMode}`;
       // console.log('Fetching service requests from', url);
       // present({ message: 'Fetching service requests...', duration: 3000, color: 'success' });
       setStatus('Fetching service requests...', 'medium', 10000, true);
@@ -98,31 +101,30 @@ const ServiceRequestsList: React.FC = () => {
     <IonPage id="home-page">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Service Requests List</IonTitle>
+          <IonTitle>{t('srl.page_title')}</IonTitle>
+          <IonButtons slot="end"><IonMenuButton /></IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="content-with-status-bar">
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        <IonList className="list-with-status-bar">
-          {
-            serviceRequests.map(
-              srli => (
-                <ServiceRequestListItem
-                  key={srli.serviceRequestId}
-                  serviceRequest={srli}
-                />
-              )
-            )
-          }
-        </IonList>
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => fetchServiceRequests()}>
-            <IonIcon icon={refreshIcon} />
-          </IonFabButton>
-        </IonFab>
+        <div className="list-with-status-bar">
+          {serviceRequests.map(srli => (
+            <ServiceRequestListItem
+              key={srli.serviceRequestId}
+              serviceRequest={srli}
+            />
+          ))}
+        </div>
       </IonContent>
+      <IonFooter>
+        <IonToolbar style={{ padding: '0 16px 12px 16px' }}>
+          <IonButton expand="block" style={{ height: '52px' }} onClick={() => history.push('/csr')}>
+            {t('srl.new')}
+          </IonButton>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

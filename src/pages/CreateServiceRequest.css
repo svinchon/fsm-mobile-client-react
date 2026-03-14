@@ -1,5 +1,125 @@
-.csr-image::part(image) {
-  max-height: 300px;
+.csr-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.csr-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.csr-title-block {
+  margin-bottom: 12px;
+}
+
+.csr-title-main {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--ion-text-color);
+}
+
+.csr-title-sub {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+
+.csr-textarea-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+}
+
+.csr-textarea {
+  flex: 1;
   width: 100%;
-  object-fit: contain;
+  height: 100%;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 12px;
+  padding: 12px 12px 64px 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--ion-text-color);
+  background: var(--ion-item-background, var(--ion-background-color));
+  resize: none;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.csr-textarea:focus {
+  border-color: var(--ion-color-primary);
+}
+
+.csr-thumb-wrapper {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 56px;
+  height: 56px;
+}
+
+.csr-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--ion-color-primary);
+  display: block;
+}
+
+.csr-thumb-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ion-color-danger);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.csr-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.csr-icon-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: none;
+  background: var(--ion-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.csr-send-btn {
+  background: var(--ion-color-primary);
+}
+
+.csr-send-disabled {
+  background: var(--ion-color-medium);
+  opacity: 0.5;
 }

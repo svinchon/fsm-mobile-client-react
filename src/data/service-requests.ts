@@ -67,7 +67,16 @@ const serviceRequests: ServiceRequest[] = [
     "city":2,
     "issueDescription":"Dishwasher not draining",
     "preferredDate":1766707200000,
-    "equipmentPhoto":[],
+    "equipmentPhoto":[
+      {
+        "id":"af4806fb-2e19-4e58-8226-9790f20a0e8d",
+        "fileName":"Sample_label.png"
+      },
+      {
+        "id":"af4806fb-2e19-4e58-8226-9790f20a0e8e",
+        "fileName":"Sample_label.png"
+      }
+    ],
     "serviceRequestStatus":"PENDING",
     "customerMobileNumber":"9876543210",
     "countryName":"United States",

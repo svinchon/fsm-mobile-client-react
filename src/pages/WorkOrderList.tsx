@@ -1,11 +1,10 @@
 import WorkOrderListItem from '../components/WorkOrderListItem';
 import { useState, useEffect, useCallback} from 'react';
 import { getWorkOrdersInit, WorkOrder } from '../data/work-orders';
-import { IonContent, IonHeader, IonList, IonPage, IonRefresher,
-  IonRefresherContent, IonTitle, IonToolbar, useIonToast, IonFab,
-  IonFabButton, IonIcon
+import { IonContent, IonHeader, IonPage, IonRefresher,
+  IonRefresherContent, IonTitle, IonToolbar, useIonToast,
+  IonButtons, IonMenuButton
 } from '@ionic/react';
-import { refresh as refreshIcon } from 'ionicons/icons';
 import './WorkOrderList.css';
 import { fetchWithTimeout } from '../utils/http';
 import { useGlobalStatus } from '../state/global-status';
@@ -22,15 +21,16 @@ const WorkOrderList: React.FC = () => {
   const fetchWorkOrders = useCallback(async () => {
 
     const fsmAppConnectorUrl = localStorage.getItem('fsmAppConnectorUrl');
-    const fsmUserEmail = localStorage.getItem('fsmUserEmail'); // Get FSM User Email
+    const rappitUserEmail = localStorage.getItem('rappitUserEmail');
     const fsmDeployedAppName = localStorage.getItem('fsmDeployedAppName');
+    const isTestMode = localStorage.getItem('isTestMode') === 'true';
 
     if (!fsmAppConnectorUrl) {
       present({ message: 'FSM App Connector URL is not configured in settings.', duration: 3000, color: 'danger' });
       return;
     }
-    if (!fsmUserEmail) {
-      present({ message: 'FSM User Email is not configured in settings.', duration: 3000, color: 'danger' });
+    if (!rappitUserEmail) {
+      present({ message: 'Rappit User Email is not configured in settings.', duration: 3000, color: 'danger' });
       return;
     }
     if (!fsmDeployedAppName) {
@@ -41,7 +41,8 @@ const WorkOrderList: React.FC = () => {
     try {
       let url = `${fsmAppConnectorUrl}/api/getWorkOrders?`;
       url = url + `&deployedAppName=${fsmDeployedAppName}`;
-      url = url + `&userEmail=${fsmUserEmail}`;
+      url = url + `&rappitUserEmail=${rappitUserEmail}`;
+      url = url + `&isTestMode=${isTestMode}`;
       //console.log('Fetching work orders from', url);
       setStatus('Fetching work orders...', 'medium', 10000, true);
       const response = await fetchWithTimeout(url);
@@ -77,37 +78,19 @@ const WorkOrderList: React.FC = () => {
     <IonPage id="home-page">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Work Order List</IonTitle>
+          <IonTitle>Work Orders</IonTitle>
+          <IonButtons slot="end"><IonMenuButton /></IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="content-with-status-bar">
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">
-              Work Orders
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonList className="list-with-status-bar">
-          {
-            workOrders.map(
-              woli => (
-                <WorkOrderListItem
-                  key={woli.workOrderId}
-                  workOrder={woli}
-                />
-              )
-            )
-          }
-        </IonList>
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => fetchWorkOrders()}>
-            <IonIcon icon={refreshIcon} />
-          </IonFabButton>
-        </IonFab>
+        <div className="list-with-status-bar">
+          {workOrders.map(woli => (
+            <WorkOrderListItem key={woli.workOrderId} workOrder={woli} />
+          ))}
+        </div>
       </IonContent>
     </IonPage>
   );
